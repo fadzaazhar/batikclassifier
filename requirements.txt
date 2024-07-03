@@ -3,4 +3,5 @@ pillow
 numpy<2.0
 tensorflow==2.14.0
 opencv-python-headless
-streamlit-webrtc
+streamlit-webrtc==0.45.1
+aiortc==1.4.0
