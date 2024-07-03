@@ -6,6 +6,13 @@ import cv2
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, VideoProcessorBase, RTCConfiguration
 import os
 
+# RTC Configuration for STUN/TURN servers
+RTC_CONFIGURATION = RTCConfiguration({
+    "iceServers": [
+        {"urls": ["stun:stun.l.google.com:19302"]}
+    ]
+})
+
 # Load the pre-trained model
 model = tf.keras.models.load_model('batik_model.h5')
 
@@ -81,23 +88,23 @@ def predict_batik(image):
     return predicted_class
 
 # Define the RTC configuration
-RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+# RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
 
-class VideoTransformer(VideoProcessorBase):
-    def __init__(self):
-        self.prediction = ""
+# class VideoTransformer(VideoProcessorBase):
+#     def __init__(self):
+#         self.prediction = ""
 
-    def transform(self, frame):
-        img = frame.to_ndarray(format="bgr24")
-        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img_pil = Image.fromarray(img_rgb)
-        self.prediction = predict_batik(img_pil)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(img, self.prediction, (50, 50), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
-        return img
+#     def transform(self, frame):
+#         img = frame.to_ndarray(format="bgr24")
+#         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#         img_pil = Image.fromarray(img_rgb)
+#         self.prediction = predict_batik(img_pil)
+#         font = cv2.FONT_HERSHEY_SIMPLEX
+#         cv2.putText(img, self.prediction, (50, 50), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+#         return img
 
-    def get_prediction(self):
-        return self.prediction
+#     def get_prediction(self):
+#         return self.prediction
 
 # ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer, rtc_configuration=RTC_CONFIGURATION)
 
@@ -191,6 +198,22 @@ elif choice == "Upload Gambar":
 elif choice == "Kamera":
     st.markdown('<p class="header-font">Kamera</p>', unsafe_allow_html=True)
     st.markdown('<p class="description-font">Hanya dapat diakses atau digunakan dengan kamera webcam (desktop).</p>', unsafe_allow_html=True)
+
+    class VideoTransformer(VideoTransformerBase):
+        def __init__(self):
+            self.prediction = ""
+
+        def transform(self, frame):
+            img = frame.to_ndarray(format="bgr24")
+            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img_pil = Image.fromarray(img_rgb)
+            self.prediction = predict_batik(img_pil)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(img, self.prediction, (50, 50), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+            return img
+
+        def get_prediction(self):
+            return self.prediction
 
     ctx = webrtc_streamer(
         key="example", 
