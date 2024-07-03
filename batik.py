@@ -80,6 +80,9 @@ def predict_batik(image):
     predicted_class = class_names[np.argmax(predictions)]
     return predicted_class
 
+# Define the RTC configuration
+RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+
 class VideoTransformer(VideoProcessorBase):
     def __init__(self):
         self.prediction = ""
