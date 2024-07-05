@@ -199,7 +199,7 @@ elif choice == "Kamera":
     st.markdown('<p class="header-font">Kamera</p>', unsafe_allow_html=True)
     st.markdown('<p class="description-font">Hanya dapat diakses atau digunakan dengan kamera webcam (desktop).</p>', unsafe_allow_html=True)
 
-    class VideoTransformer(VideoTransformerBase):
+    class VideoTransformer(VideoProcessorBase):
         def __init__(self):
             self.prediction = ""
 
